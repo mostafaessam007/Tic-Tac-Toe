@@ -1,3 +1,9 @@
+const display = document.querySelector(".display");
+const restartBtn = document.querySelector(".restartBtn");
+const cell = document.querySelectorAll(".cell");
+
+
+
 //Gameboard "canvas"
 const Gameboard = (function (){
 
@@ -50,7 +56,6 @@ const GameController = (function () {
     let playerO = "O";
     let currentPlayer = playerX;
     let gameOver = false;
-    let currentMove = "";
     
     console.log(`It's player ${currentPlayer} turn`);
     
@@ -92,42 +97,8 @@ const GameController = (function () {
    return {switchPlayer,playTurn}
 })();
 
-
-
-
-
-
-//code test
-function makeAddFunction(firstNumber) {
-    return function returnedFunction(secondNumber) {
-        return firstNumber + secondNumber
-    }
+const displayBoard =() =>{
+    board.array.forEach(element => {
+        
+    });
 }
-const add5 = makeAddFunction(5)
-// console.log(add5(10));
-
-function createUser(name) {
-    const discordName = "@" + name;
-    let reputation = 0;
-    const getReuptation =() => reputation;
-    const giveReputation = () => {reputation++};
-
-    return {name, discordName, getReuptation, giveReputation}
-}
-const mo = createUser("mo");
-mo.giveReputation();
-mo.giveReputation();
-
-// console.log({
-//     discordName: mo.discordName,
-//     reputation: mo.getReuptation()
-// });
-
-function createPlayer(name,level) {
-    const {getReuptation, giveReputation} = createUser(name);
-
-    const increaseLevel = () => {level++;};
-
-    return {name, getReuptation, giveReputation, level}
-}
-// console.log(createPlayer("mo",1));
