@@ -1,6 +1,5 @@
 const display = document.querySelector(".display");
 const restartBtn = document.querySelector(".restartBtn");
-const cell = document.querySelectorAll(".cell");
 
 
 
@@ -13,9 +12,12 @@ const board = ["","","","","","","","",""];
  //a placeMark function that takes the index/cell the player wants to update and who is the current player
  function placeMark(currentPlayer,index) {
         board[index] = currentPlayer
-        console.log(board);
  }
-
+ function resetBoard() {
+    for (let index = 0; index < board.length; index++) {
+        board[index]=""
+    }
+ }
  const winnerCondtions = [
     [0,1,2],
     [3,4,5],
@@ -44,20 +46,20 @@ const board = ["","","","","","","","",""];
         return board.every(cell => cell !=="")
     }
  
- return {placeMark,board,checkWinner, checkTie}
+ return {placeMark,board,checkWinner, checkTie, resetBoard}
 })();
 
-
+let playerX = "X";
+    let playerO = "O";
+    let currentPlayer = playerX;
+    let gameOver = false;
 //Game controller
 const GameController = (function () {
     //the controller remember the current player
     //switch between two players
-    let playerX = "X";
-    let playerO = "O";
-    let currentPlayer = playerX;
-    let gameOver = false;
     
-    console.log(`It's player ${currentPlayer} turn`);
+    
+    display.textContent =`It's player ${currentPlayer} turn`;
     
     function switchPlayer() {
        currentPlayer === playerX ? currentPlayer = playerO :currentPlayer =  playerX;
@@ -71,34 +73,59 @@ const GameController = (function () {
             if (Gameboard.board[index]==="") {
         Gameboard.placeMark(currentPlayer,index);
         if (Gameboard.checkWinner()) {
-              console.log("We have a winner!!!");
+              display.textContent =`Player ${currentPlayer} is the winner!!!`;
               gameOver = true;
               return;
         } else {
             if (Gameboard.checkTie()) {
-                console.log("It's a tie!");
+                display.textContent ="It's a tie!";
                 gameOver = true;
               return;
             } else {
                  switchPlayer();
-                 console.log(`It's player ${currentPlayer} turn`);
+                 display.textContent =`It's player ${currentPlayer} turn`;
             }
         }
             
        }else{
-        console.log("This cell is already occupied, please choose another cell!");
-        console.log(`It's player ${currentPlayer} turn`);
+        display.textContent ="This cell is already occupied, please choose another cell !";
+    //    display.textContent =`It's player ${currentPlayer} turn`;
        }
         }else {
-            console.log("Game is already over!");
+            display.textContent ="Game is already over!";
             return;
         }
     }
    return {switchPlayer,playTurn}
 })();
 
-const displayBoard =() =>{
-    board.array.forEach(element => {
+const displayController =(() =>{
+const cell = document.querySelectorAll(".cell");
+
+    function displayBoard () {
+        cell.forEach((cell,index) => {
+          cell.textContent = Gameboard.board[index];  
+        });
+    }
+    function playerInput() {
+        cell.forEach((cell,index) => {
+            cell.addEventListener("click",()=>{
+                GameController.playTurn(index);
+                displayBoard()
+            })
+        });
         
-    });
-}
+    }
+    displayBoard();
+    playerInput()
+    return {displayBoard,playerInput}
+})();
+
+restartBtn.addEventListener("click",()=>{
+    gameOver = false;
+    currentPlayer = playerX;
+    display.textContent =`It's player ${currentPlayer} turn`;
+    Gameboard.resetBoard()
+    displayController.displayBoard();
+    return;
+});
